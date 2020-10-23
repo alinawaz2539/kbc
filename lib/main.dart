@@ -20,17 +20,25 @@ class _HomeState extends State<Home> {
   ];
   Map<int, List<String>> options = {
     0: [
-      'A. Yogi Adityanath',
-      'B. Narendra Modi',
-      'C. Amit Shah',
+      'A. Isaac Newton',
+      'B. Kalpana Chawla',
+      'C. Sunita William',
       'D. Neil Armstrong'
     ],
     1: ['A. 6', 'B. 7', 'C. 8', 'D. 9'],
     2: ['A. 6', 'B. 7', 'C. 8', 'D. 9'],
     3: ['A. Ranbow', 'B. Red', 'C. Rat', 'D. Right'],
   };
-
-  Widget questionTemplate(String str) {
+  Map<int, int> ans = {
+    0 : 3,
+    1 : 1,
+    2 : 2,
+    3 : 1,
+  };
+  int counter = 0;
+  int i=0;
+  int score=0;
+  Widget questionTemplate(String str, int i) {
     return Card(
       margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
       child: Padding(
@@ -38,22 +46,34 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(str,
+            FlatButton(onPressed: (){
+              setState(() {
+                if(counter <4 && ans[counter]==i){
+                  score++;
+                }
+                i=0;
+                counter += 1;
+              });
+            },
+            child: Text(str,
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.purple[600],
                 )),
+            color: Colors.white,
+            hoverColor: Colors.black,
+            splashColor: Colors.green,
+            ),
           ],
         ),
       ),
     );
   }
 
-  int counter = 0;
-
+  
   @override
   Widget build(BuildContext context) {
-    if (counter != 4) {
+    if (counter < 4) {
       return Scaffold(
           backgroundColor: Colors.grey[300],
           appBar: AppBar(
@@ -71,11 +91,48 @@ class _HomeState extends State<Home> {
                     )),
               ),
       
-              for (int i = 0; i < 4; i++)
-                questionTemplate(options[counter][i]),
+              for (i = 0; i < 4; i++)
+                questionTemplate(options[counter][i], i),
             ],
           ),
-          floatingActionButton: Padding(
+          
+          );
+    } 
+    else {
+      return Card(
+       child: Scaffold(
+        backgroundColor: Colors.grey[300],
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('KBC'),
+        ),
+       
+        body: Column(
+          children: <Widget>[
+            questionTemplate('Congrats!!!', 0),
+            questionTemplate('Your score = $score / 4', 0),
+            
+          ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            setState(() {
+              score=0;
+              i=0;
+              counter = 0;
+            });
+          },
+          label: Text('Play Again'),
+        ),
+      )
+      );
+      
+
+    }
+    // This trailing comma makes auto-formatting nicer for build methods.
+  }
+}
+/*floatingActionButton: Padding(
             padding: const EdgeInsets.fromLTRB(32.0, 0.0, 0.0, 0.0),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,6 +141,7 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       setState(() {
                         counter -= 1;
+                        i=0;
                         if (counter == -1) counter = 3;
                       });
                     },
@@ -95,38 +153,11 @@ class _HomeState extends State<Home> {
                   FloatingActionButton.extended(
                     onPressed: () {
                       setState(() {
+                        i=0;
                         counter += 1;
                       });
                     },
                     label: Text('Next'),
                   )
                 ]),
-          ));
-    } 
-    else {
-      return Scaffold(
-        backgroundColor: Colors.grey[300],
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('KBC'),
-        ),
-       
-        body: Column(
-          children: [
-            questionTemplate('Congrats!!!'),
-            questionTemplate('You have Won 7 Crores!'),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            setState(() {
-              counter = 0;
-            });
-          },
-          label: Text('Play Again'),
-        ),
-      );
-    }
-    // This trailing comma makes auto-formatting nicer for build methods.
-  }
-}
+          )*/
